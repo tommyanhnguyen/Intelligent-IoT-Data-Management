@@ -260,5 +260,4 @@ def run_pipeline(
 
 
 if __name__ == "__main__":
-    clean_df = run_pipeline()
-    logger.info(clean_df.head())
+    run_pipeline()

@@ -152,6 +152,19 @@ Possible causes include:
 - Missing uploaded dataset
 - Unexpected server error
 
+### Structured Error Response
+
+The correlation API returns predictable machine-readable errors so Backend consumers can distinguish invalid caller input, analytically unusable data, and unexpected server failures.
+
+Example:
+
+```json
+{
+  "status": "error",
+  "error_type": "invalid_input",
+  "error_code": "INVALID_METHOD",
+  "message": "'method' must be either 'pearson' or 'spearman'."
+}
 ## 11. API Testing Evidence
 
 The Correlation Alert API was tested locally after setting up the

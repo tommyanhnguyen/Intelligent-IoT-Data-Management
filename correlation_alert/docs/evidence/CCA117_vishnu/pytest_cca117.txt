@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.9, pytest-8.4.2, pluggy-1.5.0 -- /opt/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/vishnuvardhanreddypulluru/Documents/Capstone/Intelligent-IoT-Data-Management
+plugins: anyio-4.10.0
+collecting ... collected 18 items
+
+correlation_alert/testing/test_cca117_api_validation.py::test_empty_request_returns_400 PASSED [  5%]
+correlation_alert/testing/test_cca117_api_validation.py::test_wrong_file_type_returns_400 PASSED [ 11%]
+correlation_alert/testing/test_cca117_api_validation.py::test_empty_csv_returns_400 PASSED [ 16%]
+correlation_alert/testing/test_cca117_api_validation.py::test_missing_timestamp_returns_400 PASSED [ 22%]
+correlation_alert/testing/test_cca117_api_validation.py::test_missing_stream_returns_400 PASSED [ 27%]
+correlation_alert/testing/test_cca117_api_validation.py::test_single_stream_returns_400 PASSED [ 33%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_method_returns_400 PASSED [ 38%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_configuration_returns_400[window_size-0] PASSED [ 44%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_configuration_returns_400[step_size--1] PASSED [ 50%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_configuration_returns_400[strong_corr_threshold-2] PASSED [ 55%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_configuration_returns_400[weak_corr_threshold--2] PASSED [ 61%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_configuration_returns_400[delta_threshold--0.1] PASSED [ 66%]
+correlation_alert/testing/test_cca117_api_validation.py::test_invalid_configuration_returns_400[delta_threshold-2.1] PASSED [ 72%]
+correlation_alert/testing/test_cca117_api_validation.py::test_insufficient_rows_returns_422 PASSED [ 77%]
+correlation_alert/testing/test_cca117_api_validation.py::test_only_one_window_returns_422 PASSED [ 83%]
+correlation_alert/testing/test_cca117_api_validation.py::test_valid_request_returns_200 PASSED [ 88%]
+correlation_alert/testing/test_cca117_api_validation.py::test_no_alerts_is_success_not_error PASSED [ 94%]
+correlation_alert/testing/test_cca117_api_validation.py::test_oversized_upload_returns_error PASSED [100%]
+
+============================== 18 passed in 0.76s ==============================

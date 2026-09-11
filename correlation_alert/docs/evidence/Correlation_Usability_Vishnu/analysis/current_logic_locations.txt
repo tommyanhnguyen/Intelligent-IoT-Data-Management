@@ -1,0 +1,54 @@
+48:    strong_corr_threshold,
+49:    weak_corr_threshold,
+50:    delta_threshold,
+65:    _require_number(strong_corr_threshold, "strong_corr_threshold", -1, 1)
+66:    _require_number(weak_corr_threshold, "weak_corr_threshold", -1, 1)
+67:    _require_number(delta_threshold, "delta_threshold", 0, 2)
+71:    if weak_corr_threshold >= strong_corr_threshold:
+72:        raise InputValidationError("weak_corr_threshold must be below strong_corr_threshold")
+144:                skipped_pairs.append({**common, "reason": "undefined_correlation"})
+152:                    "previous_corr": previous_float,
+153:                    "current_corr": current_float,
+154:                    "delta": abs(current_float - previous_float),
+160:def get_alert_level(
+161:    delta,
+162:    delta_threshold=DEFAULT_DELTA_THRESHOLD,
+166:    """Classify one correlation delta using a single severity rule."""
+168:        value = float(delta)
+172:    if pd.isna(value) or value < delta_threshold:
+181:def _at_least_medium(alert_level):
+182:    if SEVERITY_RANK[alert_level] < SEVERITY_RANK["MEDIUM"]:
+184:    return alert_level
+189:    strong_corr_threshold=DEFAULT_STRONG_THRESHOLD,
+190:    weak_corr_threshold=DEFAULT_WEAK_THRESHOLD,
+191:    delta_threshold=DEFAULT_DELTA_THRESHOLD,
+198:        delta = change["delta"]
+199:        alert_level = get_alert_level(
+200:            delta,
+201:            delta_threshold,
+205:        if alert_level is None:
+208:        previous = change["previous_corr"]
+209:        current = change["current_corr"]
+213:        if previous_strength >= strong_corr_threshold and current_strength <= weak_corr_threshold:
+214:            alert_level = _at_least_medium(alert_level)
+215:            reason = f"Strong-to-weak change: correlation went from {previous:.2f} to {current:.2f}"
+216:        elif previous_strength <= weak_corr_threshold and current_strength >= strong_corr_threshold:
+217:            alert_level = _at_least_medium(alert_level)
+218:            reason = f"Weak-to-strong change: correlation went from {previous:.2f} to {current:.2f}"
+220:            reason = f"Correlation changed by {delta:.2f}, classified as {alert_level} severity"
+222:        alerts.append(create_alert(change, alert_level, reason))
+226:def create_alert(change, alert_level, reason):
+234:        "previous_corr": change["previous_corr"],
+235:        "current_corr": change["current_corr"],
+236:        "delta": change["delta"],
+237:        "alert_level": alert_level,
+238:        "reason": reason,
+247:    strong_corr_threshold=DEFAULT_STRONG_THRESHOLD,
+248:    weak_corr_threshold=DEFAULT_WEAK_THRESHOLD,
+249:    delta_threshold=DEFAULT_DELTA_THRESHOLD,
+258:        strong_corr_threshold,
+259:        weak_corr_threshold,
+260:        delta_threshold,
+277:        strong_corr_threshold,
+278:        weak_corr_threshold,
+279:        delta_threshold,

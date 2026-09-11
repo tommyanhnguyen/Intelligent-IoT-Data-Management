@@ -1,0 +1,22 @@
+run,pair,alert_count
+aws_20_10,ec2_net <-> elb_req,102
+aws_20_10,ec2_cpu <-> ec2_net,78
+aws_20_10,ec2_cpu <-> elb_req,71
+aws_60_30,ec2_cpu <-> elb_req,10
+aws_60_30,ec2_cpu <-> ec2_net,8
+aws_60_30,ec2_net <-> elb_req,5
+complex_20_10,s1 <-> s2,9
+complex_20_10,s2 <-> s3,8
+complex_20_10,s1 <-> s3,2
+traffic_20_10,occupancy_6005 <-> speed_t4013,54
+traffic_20_10,occupancy_6005 <-> occupancy_t4013,51
+traffic_20_10,speed_6005 <-> speed_t4013,49
+traffic_20_10,occupancy_6005 <-> speed_6005,44
+traffic_20_10,occupancy_t4013 <-> speed_t4013,43
+traffic_20_10,occupancy_t4013 <-> speed_6005,41
+traffic_60_30,occupancy_6005 <-> occupancy_t4013,18
+traffic_60_30,occupancy_t4013 <-> speed_t4013,8
+traffic_60_30,occupancy_6005 <-> speed_6005,7
+traffic_60_30,occupancy_t4013 <-> speed_6005,6
+traffic_60_30,occupancy_6005 <-> speed_t4013,2
+traffic_60_30,speed_6005 <-> speed_t4013,2

@@ -1,0 +1,34 @@
+complex.csv usability reference comparison
+============================================
+
+Configuration:
+window_size = 20
+step_size = 10
+method = pearson
+streams = s1,s2,s3
+
+Vishnu current run:
+windows = 99
+changes = 294
+alerts = 19
+HIGH = 14
+MEDIUM = 2
+LOW = 3
+sign reversals = 14
+
+Guna reference run:
+windows = 99
+comparisons = 294
+alerts = 19
+HIGH = 3
+MEDIUM = 13
+LOW = 3
+sign reversals = 14
+
+Observation:
+The total number of windows, changes, alerts and sign reversals matches,
+but severity distribution differs significantly.
+
+This means alert_level should not yet be assumed to be a stable basis
+for ranking user-facing correlation insights until the implementation
+version / severity behaviour is verified.

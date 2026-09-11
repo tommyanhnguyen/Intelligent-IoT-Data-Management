@@ -1,0 +1,3 @@
+/static/<path:filename>                  ['GET', 'HEAD', 'OPTIONS']
+/service-status                          ['GET', 'HEAD', 'OPTIONS']
+/detect-correlation-alert                ['OPTIONS', 'POST']

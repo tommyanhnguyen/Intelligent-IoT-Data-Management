@@ -1,0 +1,67 @@
+CORRELATION USABILITY INVESTIGATION SUMMARY
+================================================
+
+Run: aws_20_10
+Alerts: 251
+HIGH/MEDIUM/LOW: 7/60/184
+Unique pairs: 3
+Sign reversals: 196 (78.09%)
+Grouped episodes: 200
+Grouping reduction: 20.3%
+Most repeated pair: ec2_net <-> elb_req (102 alerts)
+Largest change pair: ec2_cpu <-> ec2_net
+Largest delta: 1.5028195198847478
+Severity: HIGH
+Reversal: True
+
+Run: aws_60_30
+Alerts: 23
+HIGH/MEDIUM/LOW: 1/4/18
+Unique pairs: 3
+Sign reversals: 21 (91.3%)
+Grouped episodes: 20
+Grouping reduction: 13.0%
+Most repeated pair: ec2_cpu <-> elb_req (10 alerts)
+Largest change pair: ec2_cpu <-> ec2_net
+Largest delta: 0.9720664048676021
+Severity: HIGH
+Reversal: True
+
+Run: complex_20_10
+Alerts: 19
+HIGH/MEDIUM/LOW: 14/2/3
+Unique pairs: 3
+Sign reversals: 14 (73.68%)
+Grouped episodes: 14
+Grouping reduction: 26.3%
+Most repeated pair: s1 <-> s2 (9 alerts)
+Largest change pair: s1 <-> s3
+Largest delta: 1.7758909784700339
+Severity: HIGH
+Reversal: True
+
+Run: traffic_20_10
+Alerts: 282
+HIGH/MEDIUM/LOW: 20/68/194
+Unique pairs: 6
+Sign reversals: 193 (68.44%)
+Grouped episodes: 212
+Grouping reduction: 24.8%
+Most repeated pair: occupancy_6005 <-> speed_t4013 (54 alerts)
+Largest change pair: occupancy_6005 <-> speed_6005
+Largest delta: 1.040541992180385
+Severity: HIGH
+Reversal: True
+
+Run: traffic_60_30
+Alerts: 43
+HIGH/MEDIUM/LOW: 1/4/38
+Unique pairs: 6
+Sign reversals: 26 (60.47%)
+Grouped episodes: 41
+Grouping reduction: 4.7%
+Most repeated pair: occupancy_6005 <-> occupancy_t4013 (18 alerts)
+Largest change pair: occupancy_t4013 <-> speed_t4013
+Largest delta: 0.7038500838803012
+Severity: HIGH
+Reversal: True

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const pool = require("./db/pool");
 
 const { assertProductionAuthConfig } = require("./config/authConfig");
 const { MAX_REQUEST_BODY_BYTES } = require("./config/uploadLimits");
@@ -55,16 +56,29 @@ function createApp() {
     });
   });
 
-  app.get("/ready", (_req, res) =>
-    process.env.NODE_ENV === "production" && !process.env.JWT_SECRET
-      ? res.status(503).json({
-          error: {
-            code: "READY_DEPENDENCY_UNAVAILABLE",
-            message: "Authentication configuration is unavailable.",
-          },
-        })
-      : res.json({ status: "ready" }),
-  );
+  //app.js health check
+  app.get("/ready", async (_req, res) => {
+    if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
+      return res.status(503).json({
+        error: {
+          code: "READY_DEPENDENCY_UNAVAILABLE",
+          message: "Authentication configuration is unavailable.",
+        },
+      });
+    }
+  
+    try {
+      await pool.query("SELECT 1");
+      return res.json({ status: "ready" });
+    } catch (_error) {
+      return res.status(503).json({
+        error: {
+          code: "READY_DEPENDENCY_UNAVAILABLE",
+          message: "PostgreSQL is unavailable.",
+        },
+      });
+    }
+  });
 
   // Main Backend routes:
   // analyse, datasets, series, timestamps, mocks

@@ -125,6 +125,20 @@ const StatsCard = ({ stream, data }) => {
 
 ---
 
+## Analysis History development
+
+Set `VITE_ANALYSIS_HISTORY_MOCKS=true` in `frontend/.env.local` and restart Vite to
+serve the provided history fixtures at `/analysis-history`. Access still uses the
+standard sign-in session. An authenticated browser can use
+`/analysis-history?pageSize=2` to exercise pagination with the three fixture runs.
+Production uses the authenticated `GET /api/analysis/runs` endpoint.
+
+FE-02 can replace `AnalysisRunPlaceholder` in `App.jsx` at
+`/analysis-history/:runId`. Links supply the run UUID as the `runId` path parameter
+and retain the history query string for the back link.
+
+---
+
 ## 🙌 Final Thoughts
 
 This dashboard is meant to grow—but only if we keep it clean, modular, and intentional. Build components that are easy to read, easy to reuse, and easy to debug.

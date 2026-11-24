@@ -1,6 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import { logoutUser } from "../services/authClient";
+import { ANALYSIS_HISTORY_PATH } from "../utils/analysisHistoryRoutes";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -41,6 +42,14 @@ const Navbar = () => {
           >
             Home
           </Link>
+
+          <NavLink
+            to={ANALYSIS_HISTORY_PATH}
+            className="navbar__link"
+            onClick={() => window.scrollTo(0, 0)}
+          >
+            Analysis History
+          </NavLink>
 
           <button
             className="navbar__logout-btn"

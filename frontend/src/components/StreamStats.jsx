@@ -1,11 +1,12 @@
 import { useState } from "react";
 import AnalyticsMiniChart from "./AnalyticsMiniChart.jsx";
+import { parseSensorReading } from "../utils/sensorReading.js";
 
 
 const getStats = (data, stream) => {
   const values = data
-    .map((d) => parseFloat(d[stream]))
-    .filter((v) => !Number.isNaN(v));
+    .map((d) => parseSensorReading(d[stream]))
+    .filter(Number.isFinite);
 
   if (values.length === 0) {
     return {
@@ -73,7 +74,7 @@ const StreamStats = ({
       </h3>
 
       <AnalyticsMiniChart
-        data={data}
+        data={stats.count > 0 ? data : []}
         stream={stream}
         displayName={displayName}
         colorIndex={colorIndex}

@@ -10,6 +10,8 @@ import {
 } from 'recharts';
 
 import { getChartColor } from "../utils/chartColors.js";
+import { parseSensorReading } from "../utils/sensorReading.js";
+import SensorReadingDot from "./SensorReadingDot.jsx";
 
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
@@ -29,14 +31,11 @@ const normalizeText = (value) =>
 
 const calculateStreamStats = (data, stream) => {
   const values = data
-    .map((row) => Number(row[stream]))
+    .map((row) => parseSensorReading(row[stream]))
     .filter(Number.isFinite);
 
   if (values.length === 0) {
-    return {
-      mean: 0,
-      standardDeviation: 0,
-    };
+    return null;
   }
 
   const mean =
@@ -121,15 +120,8 @@ const getRawAlertValue = (
     return null;
   }
 
-  if (
-    Number.isFinite(
-      Number(supportingValues.sensor_value)
-    )
-  ) {
-    return Number(
-      supportingValues.sensor_value
-    );
-  }
+  const sensorValue = parseSensorReading(supportingValues.sensor_value);
+  if (sensorValue !== null) return sensorValue;
 
   const possibleNames = [
     normalizeText(stream),
@@ -139,14 +131,9 @@ const getRawAlertValue = (
   for (const [key, value] of Object.entries(
     supportingValues
   )) {
-    if (
-      possibleNames.includes(
-        normalizeText(key)
-      ) &&
-      Number.isFinite(Number(value))
-    ) {
-      return Number(value);
-    }
+    if (!possibleNames.includes(normalizeText(key))) continue;
+    const reading = parseSensorReading(value);
+    if (reading !== null) return reading;
   }
 
   return null;
@@ -176,7 +163,7 @@ const TimelineTooltip = ({
       row[`__alert_${stream}`];
 
     const rawValue =
-      row[`__raw_${stream}`];
+      getRawAlertValue(alert, stream, streamLabels) ?? row[`__raw_${stream}`];
 
     return (
       <div className="sensor-anomaly-tooltip">
@@ -274,6 +261,14 @@ const Chart = ({
     ])
   );
 
+  if (selectedStreams.every((stream) => stats[stream] === null)) {
+    return (
+      <p className="chart-empty-state">
+        No readings are available for the selected streams and time range.
+      </p>
+    );
+  }
+
   /*
    * Create raw/normalised chart data first.
    */
@@ -283,19 +278,11 @@ const Chart = ({
     };
 
     selectedStreams.forEach((stream) => {
-      const rawValue = Number(row[stream]);
+      const rawValue = parseSensorReading(row[stream]);
+      updatedRow[`__raw_${stream}`] = rawValue;
 
-      updatedRow[`__raw_${stream}`] =
-        Number.isFinite(rawValue)
-          ? rawValue
-          : null;
-
-      if (!isMultiStream) {
-        updatedRow[stream] =
-          Number.isFinite(rawValue)
-            ? rawValue
-            : null;
-
+      if (!isMultiStream || rawValue === null) {
+        updatedRow[stream] = rawValue;
         return;
       }
 
@@ -304,9 +291,7 @@ const Chart = ({
         standardDeviation,
       } = stats[stream];
 
-      if (!Number.isFinite(rawValue)) {
-        updatedRow[stream] = null;
-      } else if (standardDeviation === 0) {
+      if (standardDeviation === 0) {
         updatedRow[stream] = 0;
       } else {
         updatedRow[stream] =
@@ -375,18 +360,6 @@ const Chart = ({
       return;
     }
 
-    /*
-     * Do not attach an out-of-range anomaly
-     * to the nearest visible chart point.
-     */
-    console.log('Anomaly range check:', {
-      anomalyTime: alert.timestamp,
-      visibleStart: new Date(visibleStart).toISOString(),
-      visibleEnd: new Date(visibleEnd).toISOString(),
-      inRange:
-        alertTime >= visibleStart &&
-        alertTime <= visibleEnd,
-    });
     if (
       visibleStart === null ||
       visibleEnd === null ||
@@ -430,6 +403,9 @@ const Chart = ({
     const closestRow =
       chartData[closestIndex];
 
+    // Keep a gap at the closest timestamp when there is no reading to mark.
+    if (closestRow[`__raw_${stream}`] === null) return;
+
     closestRow[
       `__anomaly_${stream}`
     ] = true;
@@ -438,47 +414,7 @@ const Chart = ({
       `__alert_${stream}`
     ] = alert;
 
-    const alertRawValue =
-      getRawAlertValue(
-        alert,
-        stream,
-        streamLabels
-      );
-
-    if (alertRawValue !== null) {
-      closestRow[
-        `__raw_${stream}`
-      ] = alertRawValue;
-    }
   });
-
-  const renderAnomalyDot =
-    (stream) => (props) => {
-      const {
-        cx,
-        cy,
-        payload,
-      } = props;
-
-      if (
-        !payload?.[
-          `__anomaly_${stream}`
-        ]
-      ) {
-        return null;
-      }
-
-      return (
-        <circle
-          cx={cx}
-          cy={cy}
-          r={6}
-          fill="#dc2626"
-          stroke="#ffffff"
-          strokeWidth={2}
-        />
-      );
-    };
 
   return (
     <div
@@ -575,9 +511,9 @@ const Chart = ({
                     ? 0.2
                     : 1
                 }
-                dot={renderAnomalyDot(stream)}
+                dot={<SensorReadingDot />}
                 activeDot={{ r: 4 }}
-                connectNulls
+                connectNulls={false}
               />
             )
           )}

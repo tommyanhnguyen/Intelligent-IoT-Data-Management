@@ -8,6 +8,7 @@ import {
   YAxis,
 } from "recharts";
 import { getChartColor } from "../utils/chartColors.js";
+import SensorReadingDot from "./SensorReadingDot.jsx";
 
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
@@ -20,16 +21,6 @@ const formatTimestamp = (timestamp) => {
     hour: "2-digit",
     minute: "2-digit",
   });
-};
-
-const formatValue = (value) => {
-  const number = Number(value);
-
-  if (Number.isNaN(number)) {
-    return value;
-  }
-
-  return number.toFixed(2);
 };
 
 const AnalyticsMiniChart = ({
@@ -104,7 +95,7 @@ const AnalyticsMiniChart = ({
                 : date.toLocaleString();
             }}
             formatter={(value) => [
-              formatValue(value),
+              value.toFixed(2),
               displayName || stream,
             ]}
             contentStyle={{
@@ -120,7 +111,7 @@ const AnalyticsMiniChart = ({
             name={displayName || stream}
             stroke={getChartColor(colorIndex)}
             strokeWidth={2}
-            dot={false}
+            dot={<SensorReadingDot />}
             activeDot={{ r: 4 }}
             connectNulls={false}
             isAnimationActive={false}

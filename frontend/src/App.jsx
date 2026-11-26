@@ -11,6 +11,8 @@ import DeveloperMetricsPage from "./pages/DeveloperMetricsPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import AboutPage from "./pages/AboutPage";
+import AnalysisHistoryPage, { AnalysisRunPlaceholder } from "./pages/AnalysisHistoryPage";
+import { ANALYSIS_HISTORY_PATH, ANALYSIS_RUN_PATH } from "./utils/analysisHistoryRoutes";
 
 function App() {
   return (
@@ -26,6 +28,26 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <HomePage />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ANALYSIS_HISTORY_PATH}
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <AnalysisHistoryPage />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ANALYSIS_RUN_PATH}
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <AnalysisRunPlaceholder />
               </Layout>
             </ProtectedRoute>
           }

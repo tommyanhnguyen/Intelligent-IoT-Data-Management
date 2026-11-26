@@ -105,7 +105,11 @@ export const getAuthHeaders = () =>
       }
     : {};
 
-export const authenticatedFetch = async (input, init = {}) => {
+export const authenticatedFetch = async (
+  input,
+  init = {},
+  { refreshOnUnauthorized = false } = {},
+) => {
   let token = accessToken;
   if (!token) {
     await refreshSession();
@@ -125,10 +129,18 @@ export const authenticatedFetch = async (input, init = {}) => {
   let response = await makeRequest(token);
   if (response.status !== 401) return response;
 
-  const error = await response.clone().json().catch(() => null);
-  if (error?.error?.code !== "ACCESS_TOKEN_EXPIRED") return response;
-
-  await refreshSession();
+  if (!refreshOnUnauthorized) {
+    const error = await response.clone().json().catch(() => null);
+    if (error?.error?.code !== "ACCESS_TOKEN_EXPIRED") return response;
+  }
+  try {
+    await refreshSession();
+  } catch (error) {
+    if (!refreshOnUnauthorized) throw error;
+    clearAccessToken();
+    return response;
+  }
   response = await makeRequest(accessToken);
+  if (refreshOnUnauthorized && response.status === 401) clearAccessToken();
   return response;
 };

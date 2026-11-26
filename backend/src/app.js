@@ -56,7 +56,6 @@ function createApp() {
     });
   });
 
-  //app.js health check
   app.get("/ready", async (_req, res) => {
     if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
       return res.status(503).json({

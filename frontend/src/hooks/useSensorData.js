@@ -52,20 +52,11 @@ export const useSensorData = (
       };
     }
 
-    const firstRow = response.rows[0];
-
-    const streamIds = response.metadata.streams.map(
-      (stream) => stream.id
-    );
-
-    const hasTimestamp =
-      firstRow.created_at !== undefined;
-
-    const hasStreamFields = streamIds.some(
-      (id) => firstRow[id] !== undefined
-    );
-
-    if (!hasTimestamp || !hasStreamFields) {
+    // A mapped stream can be missing from the first sample or from every sample.
+    if (
+      response.rows[0]?.created_at === undefined ||
+      response.metadata.streams.length === 0
+    ) {
       return {
         valid: false,
         reason:

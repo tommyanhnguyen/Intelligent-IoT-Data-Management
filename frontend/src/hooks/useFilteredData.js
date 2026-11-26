@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { parseSensorReading } from '../utils/sensorReading.js';
 
 export const useFilteredData = (data, { startTime, endTime, minEntryId, maxEntryId, selectedStreams, interval }) => {
   return useMemo(() => {
@@ -55,9 +56,7 @@ export const useFilteredData = (data, { startTime, endTime, minEntryId, maxEntry
       };
 
       selectedStreams.forEach((stream) => {
-        if (entry.hasOwnProperty(stream)) {
-          filteredEntry[stream] = parseFloat(entry[stream]);
-        }
+        filteredEntry[stream] = parseSensorReading(entry[stream]);
       });
 
       return filteredEntry;

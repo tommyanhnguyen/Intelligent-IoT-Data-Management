@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import { validateEmail, validateLoginPassword } from "../utils/validation";
@@ -29,7 +29,7 @@ function Login() {
   const [mfaChallengeId, setMfaChallengeId] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
   const [resendSecondsRemaining, setResendSecondsRemaining] = useState(0);
@@ -46,8 +46,6 @@ function Login() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const inputRefs = useRef([]);
 
   useEffect(() => {
     if (resendSecondsRemaining <= 0) return undefined;
@@ -131,7 +129,7 @@ function Login() {
         }
 
         setMfaChallengeId(challengeId);
-        setOtp(["", "", "", "", "", ""]);
+        setOtp("");
         setResendSecondsRemaining(MFA_RESEND_WAIT_SECONDS);
         setStep(2);
         return;
@@ -169,30 +167,16 @@ function Login() {
     }
   };
 
-  const handleOtpChange = (value, index) => {
-    if (!/^\d?$/.test(value)) return;
-
-    const updatedOtp = [...otp];
-    updatedOtp[index] = value;
-    setOtp(updatedOtp);
-
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
+  const handleOtpChange = (value) => {
+    setOtp(value.replace(/\D/g, "").slice(0, 6));
   };
 
   const handleVerifyCode = async (e) => {
     e.preventDefault();
 
-    const enteredCode = otp.join("");
+    const enteredCode = otp;
 
-    if (enteredCode.length !== 6) {
+    if (!/^\d{6}$/.test(enteredCode)) {
       setMessage("Please enter the 6-digit verification code.");
       setMessageType("error");
       return;
@@ -263,7 +247,7 @@ function Login() {
         setMfaChallengeId(newChallengeId);
       }
 
-      setOtp(["", "", "", "", "", ""]);
+      setOtp("");
       setResendSecondsRemaining(MFA_RESEND_WAIT_SECONDS);
       setMessage("A new verification code has been sent.");
       setMessageType("success");
@@ -283,7 +267,7 @@ function Login() {
 
   const handleBackToLogin = () => {
     setStep(1);
-    setOtp(["", "", "", "", "", ""]);
+    setOtp("");
     setMfaChallengeId(null);
     setResendSecondsRemaining(0);
     setIsResending(false);
@@ -450,27 +434,16 @@ function Login() {
               onSubmit={handleVerifyCode}
             >
               <div className="otp-container">
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    type="text"
-                    maxLength="1"
-                    className="otp-input"
-                    value={digit}
-                    onChange={(e) =>
-                      handleOtpChange(
-                        e.target.value,
-                        index
-                      )
-                    }
-                    onKeyDown={(e) =>
-                      handleKeyDown(e, index)
-                    }
-                    ref={(el) =>
-                      (inputRefs.current[index] = el)
-                    }
-                  />
-                ))}
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  autoComplete="one-time-code"
+                  className="otp-input"
+                  value={otp}
+                  onChange={(e) => handleOtpChange(e.target.value)}
+                  aria-label="6-digit verification code"
+                />
               </div>
 
               <button

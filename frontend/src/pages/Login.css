@@ -255,14 +255,14 @@
 
 .otp-container {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  width: 100%;
   margin-bottom: 26px;
 }
 
 .otp-input {
-  width: 52px;
+  width: 100%;
   height: 58px;
+  box-sizing: border-box;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-md);
   text-align: center;
@@ -335,7 +335,7 @@
   }
 
   .otp-input {
-    width: 42px;
+    width: 100%;
     height: 50px;
     font-size: 18px;
   }
